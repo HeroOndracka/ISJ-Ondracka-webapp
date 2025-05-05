@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import sqlite3
 import hashlib
 
@@ -112,11 +112,10 @@ def zobraz_kurzy():
 
     conn.close()
 
-    vystup = "<h2>Zoznam kurzov:</h2>"
-    for kurz in kurzy:
-        vystup += f"<p>{kurz}</p>"
-    vystup += '<a href="/">Späť</a>'
-    return vystup
+    
+    return render_template("kurzy.html", kurzy = kurzy)
+
+
 
 @app.route("/miesta")
 def zobraz_miesta():
