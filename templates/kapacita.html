@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Kapacita</title>
-    <link rel = "stylesheet" href="{{ url_for('static', filename = 'main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 
 <body>
 
-    <h2>sucet max. kapacity kurzov na "P":</h2>
-    {% for capacita in kapacita: %}
-                <p>{{ capacita }}</p>
-    {% endfor %}
+    <h2>Súčet max. kapacity kurzov na "P":</h2>
+    <p>{{ kapacita }}</p>  <!-- TU je fix: zobrazenie čísla priamo -->
+
     <a href="/">Späť</a>
 
 </body>

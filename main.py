@@ -1,10 +1,54 @@
 from flask import Flask, request, render_template
+from sqlalchemy import func
+from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 import hashlib
+import os
+app = Flask(__name__,instance_relative_config=True)
 
-app = Flask(__name__)
+db_path = os.path.join(app.instance_path, "kurzy_a_treneri.db")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}".replace("\\","//")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
+#--------------------------------------------------------------
+class Kurz(db.Model):
+    __tablename__ = "Kurzy"
+    ID_Kurzu = db.Column(db.Integer, primary_key = True)
+    Nazov_kurzu = db.Column(db.String, nullable = False)
+    Typ_sportu = db.Column(db.String)
+    Max_pocet_ucastnikov = db.Column(db.Integer)
+    ID_trenera = db.Column(db.Integer)
+
+    def __repr__(self):
+         return f"Kurz {self.Nazov_kurzu}"
 
 
+class Miesto(db.Model):
+    __tablename__ = "Miesta"
+    ID_miesta = db.Column(db.Integer, primary_key = True)
+    Nazov_miesta = db.Column(db.String, nullable = False)
+    Adresa = db.Column(db.String)
+    Kapacita = db.Column(db.Integer)
+
+    def __repr__(self):
+         return f"Miesto {self.Nazov_miesta}"
+
+class Trener(db.Model):
+    __tablename__ = "Treneri"
+    
+    ID_trenera = db.Column(db.Integer, primary_key=True)
+    Meno = db.Column(db.String, nullable=False)
+    Priezvisko = db.Column(db.String, nullable=False)
+    Specializacia = db.Column(db.String)
+    Telefon = db.Column(db.String)
+    Heslo = db.Column(db.String, nullable=False)  # hashované heslo
+
+    def __repr__(self):
+        return f"<Trener {self.Meno} {self.Priezvisko}>"
+
+
+#-----------------------------------------------------------
 def pripoj_db():
     conn = sqlite3.connect("kurzy_a_treneri.db")
     return conn
@@ -28,6 +72,8 @@ def registracia_form():
 
 # API ENDPOINT NA SPRACOVANIE REGISTRÁCIE. Mapuje sa na mená elementov z formulára z predošlého requestu (pomocou request.form[...])
 # Pozor - metóda je POST
+from werkzeug.security import generate_password_hash  # lepšie ako hashlib
+
 @app.route('/registracia', methods=['POST'])
 def registracia_trenera():
     meno = request.form['meno']
@@ -36,19 +82,24 @@ def registracia_trenera():
     telefon = request.form['telefon']
     heslo = request.form['heslo']
 
-    # Hashovanie hesla
-    heslo_hash = hashlib.sha256(heslo.encode()).hexdigest()
+    # Hashovanie hesla (lepší spôsob)
+    heslo_hash = generate_password_hash(heslo)
 
-    # Zápis do databázy
-    conn = pripoj_db()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Treneri (Meno, Priezvisko, Specializacia, Telefon, Heslo) VALUES (?, ?, ?, ?, ?)", 
-                   (meno, priezvisko, specializacia, telefon, heslo_hash))
-    conn.commit()
-    conn.close()
+    # Vytvorenie nového objektu Trener
+    novy_trener = Trener(
+        Meno=meno,
+        Priezvisko=priezvisko,
+        Specializacia=specializacia,
+        Telefon=telefon,
+        Heslo=heslo_hash
+    )
 
-    # Hlásenie o úspešnej registrácii
+    # Pridanie do DB
+    db.session.add(novy_trener)
+    db.session.commit()
+
     return render_template("registraciaPOST.html")
+
 
 
 @app.route('/kurzyAtreneri')
@@ -66,43 +117,19 @@ def zobraz_vysledok():
 
 @app.route("/kurzy")
 def zobraz_kurzy():
-    conn = pripoj_db()
-    cursor= conn.cursor()
-
-    cursor.execute("SELECT * FROM Kurzy")
-    kurzy = cursor.fetchall()
-
-    conn.close()
-
-    
+    kurzy = Kurz.query.all()
     return render_template("kurzy.html", kurzy = kurzy)
-
-
 
 @app.route("/miesta")
 def zobraz_miesta():
-        conn = pripoj_db()
-        cursor = conn.cursor()
+    miesta = Miesto.query.all()
+    return render_template("miesta.html", miesta = miesta)
 
-        cursor.execute("SELECT * FROM Miesta")
-        miesta = cursor.fetchall()
-
-        conn.close()
-
-        return render_template("miesta.html", miesta = miesta)
-
-
-@app.route("/kapacita") 
+@app.route("/kapacita")
 def zobraz_kapacitu():
-        conn = pripoj_db()
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT SUM(Max_pocet_ucastnikov) FROM Kurzy WHERE Nazov_kurzu LIKE 'P%'")
-        kapacita = cursor.fetchall()
-
-        conn.close()
-
-        return render_template("kapacita.html", kapacita = kapacita)
+    kapacita = db.session.query(func.sum(Kurz.Max_pocet_ucastnikov))\
+                .filter(Kurz.Nazov_kurzu.like("P%")).scalar()
+    return render_template("kapacita.html", kapacita=kapacita)
 
 
 

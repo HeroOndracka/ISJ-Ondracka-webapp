@@ -9,9 +9,10 @@
 <body>
 
     <h2>Zoznam trenerov a ich kurzov:</h2>
-    {% for vypis in vysledok: %}
-        <p>{{ vypis }}</p>
+    {% for vypis in vysledok %}
+        <p>{{ vypis.Treenr }} – {{ vypis.Nazov_kurzu }}</p>
     {% endfor %}
+
     <a href="/">Späť</a>
 
 
