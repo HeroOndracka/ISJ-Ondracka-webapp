@@ -114,41 +114,36 @@ def vkladanie_kurzov():
     return render_template("kurzyGET.html")
 
 @app.route('/sifrovanie', methods=['POST'])
+@app.route('/sifrovanie', methods=['POST'])
 def vlozenie_kurzu():
-    
-
-    def sifra(text):
-        a = 5
-        b = 8
-        text = text.upper()
-        sifrovany_text = ""
-        for char in text:
-            if char.isalpha():
-                x = ord(char) - ord('A')
-                sifrovane_pismeno = (a * x + b) % 26
-                sifrovany_text += chr(sifrovane_pismeno + ord('A'))
-            else:
-                sifrovany_text += char 
-        return sifrovany_text
-
-    nazov_kurzu = sifra(request.form.get('Nazov_kurzu', ''))
-
-    typ_sportu = sifra(request.form.get('Typ_sportu',''))
+    # Načítanie dát z formulára
+    nazov_kurzu = request.form.get('Nazov_kurzu', '')
+    typ_sportu = request.form.get('Typ_sportu', '')
     ID_kurzu = request.form['ID_kurzu']
     max_pocet_ucastnikov = request.form['Max_pocet_ucastnikov']
     ID_trenera = request.form['ID_trenera']
 
-    # Zápis do databázy
-    conn = pripoj_db()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Kurzy (ID_kurzu, Nazov_kurzu, Typ_sportu, Max_pocet_ucastnikov, ID_trenera) VALUES (?, ?, ?, ?, ?)", 
-                   (ID_kurzu, nazov_kurzu, typ_sportu, max_pocet_ucastnikov, ID_trenera))
-    print("Do DB ide nazov:", nazov_kurzu)
-    conn.commit()
-    conn.close()
+    # Debug výpis
+    print("Do DB ide kurz:", nazov_kurzu)
 
-    # Hlásenie o úspešnej registrácii
+    # Bezpečný zápis do databázy
+    try:
+        with sqlite3.connect("kurzy_a_treneri.db", timeout=10) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Kurzy (ID_kurzu, Nazov_kurzu, Typ_sportu, Max_pocet_ucastnikov, ID_trenera)
+                VALUES (?, ?, ?, ?, ?)""",
+                (ID_kurzu, nazov_kurzu, typ_sportu, max_pocet_ucastnikov, ID_trenera)
+            )
+            conn.commit()
+    except sqlite3.IntegrityError as e:
+        return f"⚠️ Chyba pri ukladaní do databázy: {e}"  # napr. duplicate ID
+    except Exception as e:
+        return f"❌ Neočakávaná chyba: {e}"
+
+    # Všetko OK → zobraz POST šablónu
     return render_template("kurzyPOST.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)

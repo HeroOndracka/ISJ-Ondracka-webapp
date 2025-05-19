@@ -1,0 +1,37 @@
+h1{
+    color: rgb(17, 69, 129);
+    font-family : 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 28px;
+    text-align: center;
+    margin-top: 40px;
+    text-transform: uppercase;
+    text-shadow: 5px 3px 3px rgba(247, 255, 14, 0.63);
+}
+
+
+h2{
+    color: rgb(17, 69, 129);
+    font-family : 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 28px;
+    text-align: center;
+    margin-top: 40px;
+    text-transform: uppercase;
+    text-shadow: 5px 3px 3px rgba(247, 255, 14, 0.63);
+}
+
+button {
+    color: rgb(204, 223, 21); font-size: 16px; line-height: 16px; padding: 17px; border-radius: 50px; font-family: Georgia, serif; font-weight: normal; text-decoration: none; font-style: normal; font-variant: normal; text-transform: none; background-image: linear-gradient(to right, rgb(28, 110, 164) 0%, rgb(35, 136, 203) 50%, rgb(20, 78, 117) 100%); box-shadow: rgb(0, 0, 0) 5px 5px 15px 5px; border: 2px solid rgb(28, 110, 164); display: inline-block;}
+    button:hover {
+    background: #2a6c98; }
+    button:active {
+    background: #144E75; }
+
+p {
+    color: rgb(17, 69, 129);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    text-align: center;
+}
+body{
+    background: rgba(198, 203, 106, 0.703) url("https://htmlcheatsheet.com/images/logo-css.png") repeat-y scroll 100% 0%;
+}

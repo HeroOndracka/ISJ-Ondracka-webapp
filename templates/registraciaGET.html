@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Registracia</title>
+    <link rel = "stylesheet" href="{{ url_for('static', filename = 'main.css') }}">
 </head>
 
 <body>
-    <h2>Registrácia trénera</h2>
+    <h2 class=".registracia">Registrácia trénera</h2>
         <form action="/registracia" method="post">
             <label>Meno:</label><br>
             <input type="text" name="meno" required><br><br>
