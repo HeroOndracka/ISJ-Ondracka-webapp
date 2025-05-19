@@ -22,7 +22,7 @@ h2{
 button {
     color: rgb(204, 223, 21); font-size: 16px; line-height: 16px; padding: 17px; border-radius: 50px; font-family: Georgia, serif; font-weight: normal; text-decoration: none; font-style: normal; font-variant: normal; text-transform: none; background-image: linear-gradient(to right, rgb(28, 110, 164) 0%, rgb(35, 136, 203) 50%, rgb(20, 78, 117) 100%); box-shadow: rgb(0, 0, 0) 5px 5px 15px 5px; border: 2px solid rgb(28, 110, 164); display: inline-block;}
     button:hover {
-    background: #2a6c98; }
+    background: #273659; }
     button:active {
     background: #144E75; }
 
@@ -33,5 +33,11 @@ p {
     text-align: center;
 }
 body{
-    background: rgba(198, 203, 106, 0.703) url("https://htmlcheatsheet.com/images/logo-css.png") repeat-y scroll 100% 0%;
+    background: #a1cbe0 url("https://htmlcheatsheet.com/images/logo-css.png") repeat-y scroll 50px -50px;
+    justify-items: center;
+}
+form{
+    justify-content: center;
+    align-content: center;
+    display:grid;
 }
