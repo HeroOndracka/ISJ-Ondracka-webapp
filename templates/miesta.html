@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="sk"></html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -8,12 +9,12 @@
 
 <body>
 
-    <h2>Zoznam miest:</h2>
+    <h2>{{t.zoznam_miest}}</h2>
 
     {% for miesto in miesta: %}
         <p>{{ miesto.Nazov_miesta }} (ID: {{ miesto.ID_miesta }})</p>
     {% endfor %}
 
-    <a href="/">Späť</a>
+    <a href="/">{{t.back}}</a>
 </body>
 </html>

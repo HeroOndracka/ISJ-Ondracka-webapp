@@ -1,5 +1,6 @@
 
-        <!DOCTYPE html>
+<!DOCTYPE html>
+<html lang = "sk"></html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -9,27 +10,27 @@
 
 <body>
 
-    <h2>Vkladanie kurzu</h2>
+    <h2>{{t.novy_kurz}}</h2>
         <form action="/sifrovanie" method="post">
-            <label>Nazov:</label><br>
+            <label>{{t.meno}}</label><br>
             <input type="text" name="Nazov_kurzu" required><br><br>
 
-            <label>Typ športu:</label><br>
+            <label>{{t.typ_sportu}}</label><br>
             <input type="text" name="Typ_sportu" required><br><br>
 
-            <label>ID kurzu:</label><br>
+            <label>{{t.id_kurzu}}</label><br>
             <input type="text" name="ID_kurzu" required><br><br>
 
-            <label>Max. počet účastníkov:</label><br>
+            <label>{{t.pocet_ucast}}</label><br>
             <input type="text" name="Max_pocet_ucastnikov" required><br><br>
 
-            <label>ID trenera:</label><br>
+            <label>{{t.id_trenera}}</label><br>
             <input type="text" name="ID_trenera" required><br><br>
 
-            <button type="submit">Vložiť</button>
+            <button type="submit">{{t.vlozit}}</button>
         </form>
         <hr>
-        <a href="/">Späť</a>
+        <a href="/">{{t.back}}</a>
 
 </body>
 </html>

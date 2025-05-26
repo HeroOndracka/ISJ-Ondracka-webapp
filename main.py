@@ -4,13 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 import hashlib
 import os
-app = Flask(__name__,instance_relative_config=True)
+from flask import g, session
+from i18n import TRANSLATIONS, SUPPORTED
 
+app = Flask(__name__,instance_relative_config=True)
+app.secret_key=os.urandom(3)
 db_path = os.path.join(app.instance_path, "kurzy_a_treneri.db")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}".replace("\\","//")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
+
 #--------------------------------------------------------------
 class Kurz(db.Model):
     __tablename__ = "Kurzy"
@@ -52,6 +56,20 @@ class Trener(db.Model):
 def pripoj_db():
     conn = sqlite3.connect("kurzy_a_treneri.db")
     return conn
+
+
+@app.before_request
+def set_lang():
+    lang = request.args.get("lang")
+
+    if lang not in SUPPORTED:
+        lang=session.get("lang", "sk")
+    session["lang"] = lang
+    g.t = TRANSLATIONS[lang]
+
+@app.context_processor
+def inject_translations():
+    return dict(t=g.t)
 
 
 @app.route('/')  # API endpoint
