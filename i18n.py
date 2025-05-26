@@ -1,5 +1,6 @@
 TRANSLATIONS = {
     "sk": {
+        "oznam_kurzy":"KURZ ÚSPEŠNE PRIDANÝ!",
         "id_trenera": "ID TRÉNERA:",
         "pocet_ucast": " MAX. POČET ÚČASTNÍKOV:",
         "id_kurzu": "ID KURZU:",
@@ -27,6 +28,7 @@ TRANSLATIONS = {
         "back": "Späť"
     },
     "en": {
+        "oznam_kurzy": "COURSE ADDED SUCCESSFULLY!",
         "id_trenera": "TRAINER ID:",
         "pocet_ucast": "MAX. NUMBER OF PARTICIPANTS:",
         "id_kurzu": "COURSE ID:",
